@@ -14,6 +14,8 @@ jobs:
         with:
           node-version: 16
       - run: cd serverless
+      - run: npm i
+        working-directory: serverless
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
         with:
