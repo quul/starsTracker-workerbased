@@ -1,5 +1,5 @@
 name: Deploy serverless to Cloudflare Worker
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: Deploy to Cloudflare Workers
 on:
   push:
     branches:
@@ -15,4 +15,4 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-        working-directory: ./serverless
+          workingDirectory: serverless
