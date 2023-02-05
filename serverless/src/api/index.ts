@@ -2,6 +2,7 @@ import {Env} from "..";
 import {auth, loginAction} from "./routes/auth";
 import {User} from "../types";
 import {listAction} from "./routes/list";
+import {HistoryAction} from "./routes/history"
 
 const router = async (request: Request, env: Env): Promise<Response> => {
   const KV = env.starsTrackerKV
@@ -17,6 +18,8 @@ const router = async (request: Request, env: Env): Promise<Response> => {
     const username = auth(request, userInfo)
     if (pathname === '/api/list') {
       resp = await listAction(request, username, KV)
+    } else if (pathname==='/api/history') {
+      resp = await HistoryAction(request, username, KV)
     }
   }
   return resp
