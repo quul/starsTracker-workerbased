@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import {Alert, Spin, Card, Statistic, Row, Col} from "antd";
+import {Alert, Spin, Card, Statistic, Row, Col, Pagination} from "antd";
 import React, {useEffect, useState} from "react";
 import {Header} from "@/components/Header";
 import {StarCard} from "@/components/StarCard";
@@ -21,9 +21,26 @@ const NowCards = ({data}) => {
 }
 
 const StarCards = ({data}) => {
+  const totalCount = data.length
+
+  const [pageSize, setPageSize] = useState(20)
+  const [currentPage, setCurrentPage] = useState(1)
+  const onPaginationChanged = (page: number, pageSize: number) => {
+    setCurrentPage(page)
+    setPageSize(pageSize)
+  }
+
+  const shownData = data.slice((currentPage-1)*pageSize, currentPage*pageSize)
   return (
     <>
-      {data.map((starData) => (<StarCard data={starData}/>))}
+      {shownData.map((starData) => <StarCard key={starData.name} data={starData}/>)}
+      <Pagination
+        total={totalCount}
+        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+        defaultPageSize={pageSize}
+        defaultCurrent={currentPage}
+        onChange={onPaginationChanged}
+      />
     </>
   )
 }
@@ -32,13 +49,14 @@ const StarsListNow = () => {
   const {data, error, isLoading} = useSWR('/api/list', (...args) => fetch(...args).then(res => res.json()))
   if (isLoading) return <Spin/>
   if (error) return <Alert message="loading error" type="error"/>
+  const dataParsed = JSON.parse(data)
   return (
     <div id={"starsListNow"}>
       <div id={"now-card"}>
-        <NowCards data={data}/>
+        <NowCards data={dataParsed}/>
       </div>
       <div id={"star-cards"}>
-        <StarCards data={data}/>
+        <StarCards data={dataParsed}/>
       </div>
     </div>
   )

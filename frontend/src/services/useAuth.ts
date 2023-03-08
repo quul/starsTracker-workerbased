@@ -1,3 +1,4 @@
+// @ts-ignore
 import Cookies from "js-cookie"
 
 export default () => {
@@ -6,5 +7,5 @@ export default () => {
   if (authKey) {
     isLogin = true
   }
-  return { isLogin }
+  return { isLogin, authKey }
 }

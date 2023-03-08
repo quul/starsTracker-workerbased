@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {Alert, Button, Checkbox, Form, Input, Spin} from 'antd'
 import axios from "axios"
 import {history} from 'umi'
+import Cookies from 'js-cookie'
 
 const LoginPage: React.FC = ({}) => {
   type LoginValueType = {
@@ -15,6 +16,9 @@ const LoginPage: React.FC = ({}) => {
     setLoading(true)
     axios.post('/api/login', {...values})
       .then(resp => {
+        if (resp.data.status === 'ok') {
+          Cookies.set('authKey', resp.data.authKey)
+        }
         history.push('/')
       })
       .catch(e => {
@@ -25,7 +29,7 @@ const LoginPage: React.FC = ({}) => {
   return (
     <Spin spinning={loading}>
       <div id={"login-page"}>
-        {isLoginIncorrect ? <Alert message="密码错误" type="error"/> : null}
+        {isLoginIncorrect ? <><Alert message="密码错误" type="error"/><br/></> : null}
         <Form
           name="basic"
           labelCol={{span: 8}}
