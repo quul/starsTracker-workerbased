@@ -11,7 +11,7 @@ const login = async (req: Request, userInfo: User[]): Promise<String> => {
     const credentials: Credentials = await req.json()
     let isAuth = userInfo.some(user => (user.name === credentials.username && user.authPass === credentials.password))
     if (isAuth) {
-      return btoa(credentials.username) // TODO: Use RSA encrypt
+      return encodeURIComponent(btoa(credentials.username)) // TODO: Use RSA encrypt
     } else return "BadPassword"
   } catch (e) {
     if (e instanceof SyntaxError) {
@@ -25,7 +25,7 @@ const auth = (req: Request, userInfo: User[]): string => {
   const cookie = parse(req.headers.get('Cookie') || '');
   let isAuth: string = ""
   if (cookie['authKey'] != undefined) {
-    const username = atob(cookie['authKey'])
+    const username = atob(decodeURIComponent(cookie['authKey']))
     const user = userInfo.find(user => user.name === username)
     isAuth = user?.name ? user.name : ""
   }
@@ -34,8 +34,8 @@ const auth = (req: Request, userInfo: User[]): string => {
 
 const loginAction = async (request: Request, userInfo: User[]): Promise<Response> => {
   const authKey = await login(request, userInfo)
-  if (!authKey.startsWith("Bad")) {
-    return new Response(JSON.stringify({status: 'ok'}), {
+  if (!authKey.startsWith("Bad")) { // TODO: Seemed buggy
+    return new Response(JSON.stringify({status: 'ok', authKey}), {
       headers: {
         "Set-Cookie": `authKey=${authKey}`
       }
