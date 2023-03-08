@@ -10,6 +10,12 @@ export default defineConfig({
       ],
     }
   ],
+  proxy: {
+    '/api': {
+      'target': 'https://stars.m2.gay/',
+      'changeOrigin': true,
+    }
+  },
   npmClient: 'pnpm',
   plugins: ['@umijs/plugins/dist/react-query']
 });

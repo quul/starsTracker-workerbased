@@ -1,39 +1,54 @@
-import yayJpg from '../assets/yay.jpg';
 import useSWR from 'swr'
-import {Alert, Spin} from "antd";
+import {Alert, Spin, Card, Statistic, Row, Col} from "antd";
 import React, {useEffect, useState} from "react";
+import {Header} from "@/components/Header";
+import {StarCard} from "@/components/StarCard";
 
-const StarsStatistics = (): JSX.Element => {
+const NowCards = ({data}) => {
+  const totalCount = data.length
+  return (
+    <Row gutter={16}>
+      <Col span={12}>
+        <Card bordered={false}>
+          <Statistic
+            title="Current Stars"
+            value={totalCount}
+          />
+        </Card>
+      </Col>
+    </Row>
+  )
+}
+
+const StarCards = ({data}) => {
   return (
     <>
-      <div>test</div>
+      {data.map((starData) => (<StarCard data={starData}/>))}
     </>
   )
 }
 
-export default function HomePage() {
+const StarsListNow = () => {
   const {data, error, isLoading} = useSWR('/api/list', (...args) => fetch(...args).then(res => res.json()))
   if (isLoading) return <Spin/>
   if (error) return <Alert message="loading error" type="error"/>
+  return (
+    <div id={"starsListNow"}>
+      <div id={"now-card"}>
+        <NowCards data={data}/>
+      </div>
+      <div id={"star-cards"}>
+        <StarCards data={data}/>
+      </div>
+    </div>
+  )
+}
 
-  const {
-    data: historyData,
-    error: historyError,
-    isLoading: isHistoryLoading
-  } = useSWR('/api/history', (...args) => fetch(...args).then(res => res.json()))
-  const [displayedHistoryData, setDisplayedHistoryData] = useState(null)
-  useEffect(() => {
-    if (!isHistoryLoading) {
-      historyData.forEach((historys: any) => {
-      })
-    }
-  }, [historyData])
-
+export default function HomePage() {
   return (
     <div>
-      <div>
-
-      </div>
+      <Header currentLocation={"star"}/>
+      <StarsListNow/>
     </div>
   );
 }
