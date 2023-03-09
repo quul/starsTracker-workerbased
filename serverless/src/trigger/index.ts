@@ -67,7 +67,7 @@ const trigger = async (env: Env): Promise<void> => {
     const newDeleted = oldStars.filter(oldStar => !newStars.some(newStar => newStar.fullName === oldStar.fullName))
 
     const date = (new Date())
-    const UTCDateString = `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()}`
+    const UTCDateString = `${date.getUTCFullYear()}-${date.getUTCMonth()+1}-${date.getUTCDate()}`
     const diffNow = await KV.get(`diff:${user.name}:${UTCDateString}`, "json")
     if (!diffNow) {
       if (newAdded.length + newDeleted.length > 0) {
