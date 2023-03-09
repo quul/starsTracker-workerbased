@@ -1,13 +1,21 @@
-import { defineConfig } from "umi";
+import {defineConfig} from "umi";
 
 export default defineConfig({
   routes: [
     {path: "/login", component: "login"},
     {
-      path: "/", component: "index",
+      path: "/",
+      component: "index",
       wrappers: [
         '@/wrappers/auth'
       ],
+    },
+    {
+      path: "/history",
+      component: 'history',
+      wrappers: [
+        '@/wrappers/auth'
+      ]
     }
   ],
   proxy: {
